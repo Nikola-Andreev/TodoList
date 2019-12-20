@@ -1,36 +1,32 @@
-import * as request from "request";
+import RequestMethod from "../enums/RequestMethod";
+import ServicesHelper from "../helpers/services helper";
 
 export default class UsersService {
 
-    constructor() { }
+    private static readonly _baseProductsUrl = 'https://baas.kinvey.com/appdata/kid_rJYPtVPCS/products';
+    private static readonly _baseHeaders = {
+        'Content-Type': 'application/json',
+    };
 
     getUserById(id: String): Promise<any> {
         const options = {
-            url: `https://baas.kinvey.com/user/kid_rJYPtVPCS/${id}`,
-            method: 'GET',
+            url: `${UsersService._baseProductsUrl}/${id}`,
+            method: RequestMethod.GET,
             headers: {
-                'Content-Type': 'application/json',
+                ...UsersService._baseHeaders,
                 'Authorization': "Basic YWRtaW46YWRtaW4"
             }
         };
         
-        return new Promise((resolve, reject) => {
-            request(options, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(JSON.parse(body));
-                }
-            });
-        });
+        return ServicesHelper.createPromiseRequest(options);
     }
 
     login(username: String, password: String): Promise<any> {
         const options = {
-            url: 'https://baas.kinvey.com/user/kid_rJYPtVPCS/login',
-            method: 'POST',
+            url: `${UsersService._baseProductsUrl}/login`,
+            method: RequestMethod.POST,
             headers: {
-                'Content-Type': 'application/json',
+                ...UsersService._baseHeaders,
                 'Authorization': "Basic a2lkX3JKWVB0VlBDUzpiNjE2NzRjNjg1YTg0NGRhOWIzZTViMWU4NTE4MWQyZg=="
             },
             json: true,
@@ -40,14 +36,6 @@ export default class UsersService {
             }
         };
         
-        return new Promise((resolve, reject) => {
-            request(options, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(body);
-                }
-            });
-        });
+        return ServicesHelper.createPromiseRequest(options);
     }
 }

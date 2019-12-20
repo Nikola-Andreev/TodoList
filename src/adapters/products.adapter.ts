@@ -2,9 +2,10 @@ import VatService from "../services/vat.service";
 
 export default class ProductsAdapter {
 
+    private static readonly _defaultVatRate = 20;
+    
     private readonly _vatService: VatService;
     private _vatRates: any;
-    private _defaultVatRate = 20;
 
     constructor(vatService: VatService) {
         this._vatService = vatService;
@@ -13,7 +14,7 @@ export default class ProductsAdapter {
 
     private async setVatRates() {
         const vats: any = await this._vatService.getAllVats();
-        this._vatRates = vats.rates;
+        this._vatRates = JSON.parse(vats).rates;
     }
 
     mergeObjects(currentProduct: any, newProduct: any) {
@@ -22,7 +23,7 @@ export default class ProductsAdapter {
 
     prepareResponse(products: any, countryCode?: string) {
         const targetRate = this._vatRates.find(vr => vr.country_code === countryCode);
-        let rate = this._defaultVatRate;
+        let rate = ProductsAdapter._defaultVatRate;
         if (targetRate) {
             rate = targetRate.periods.standart;
         }

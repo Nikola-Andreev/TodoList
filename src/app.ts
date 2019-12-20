@@ -2,20 +2,23 @@ import { Request, Response, NextFunction } from "express";
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as passport from "passport";
-import ProductsRouter from "./routes/products.routes";
 import UsersRouter from "./routes/users.routes";
+import ProductsRouter from "./routes/products.routes";
+import OrdersRouter from "./routes/orders.routes";
 import JWT from "./configurations/jwt.configuration";
 
 export default class App {
 
     private readonly _app: express.Application;
-    private readonly _productsRouter: ProductsRouter;
     private readonly _usersRouter: UsersRouter;
+    private readonly _productsRouter: ProductsRouter;
+    private readonly _ordersRouter: OrdersRouter;
     private readonly _jwt: JWT;
 
-    constructor(productsRouter: ProductsRouter, usersRouter: UsersRouter, jwt: JWT) {
-        this._productsRouter = productsRouter;
+    constructor(usersRouter: UsersRouter, productsRouter: ProductsRouter, ordersRouter: OrdersRouter, jwt: JWT) {
         this._usersRouter = usersRouter;
+        this._productsRouter = productsRouter;
+        this._ordersRouter = ordersRouter;
         this._jwt = jwt;
         this._app = express();
         this._initMiddleware();
@@ -50,5 +53,6 @@ export default class App {
     private _initRoutes(): void {
         this._app.use("/api/v1.0.0/products", this._productsRouter.router);
         this._app.use("/api/v1.0.0/users", this._usersRouter.router);
+        this._app.use("/api/v1.0.0/orders", this._ordersRouter.router);
     }
 }

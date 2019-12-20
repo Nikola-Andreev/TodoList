@@ -13,11 +13,11 @@ export default class ProductsController {
     }
 
     async getAllProducts(req: Request, res: Response, next: NextFunction) {
-        const products: any[] = await this._productsService.getAllProducts().catch((err) => {
+        const products: any = await this._productsService.getAllProducts().catch((err) => {
             res.status(500).send(err.message);
         });
         if(!products) return; 
-        res.status(200).send(this._productsAdapter.prepareResponse(products));
+        res.status(200).send(this._productsAdapter.prepareResponse(JSON.parse(products)));
     }
 
     async addProduct(req: Request, res: Response, next: NextFunction) {
@@ -42,7 +42,7 @@ export default class ProductsController {
             res.status(404).send("Product not fownd");
             return;
         }
-        const updateData = this._productsAdapter.mergeObjects(currentProduct, req.body);
+        const updateData = this._productsAdapter.mergeObjects(JSON.parse(currentProduct), req.body);
         const updatedProduct: any = await this._productsService.editProduct(updateData, req.params.id).catch(err => {
             res.status(500).send(err.message);
         });

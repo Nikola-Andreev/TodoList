@@ -1,24 +1,20 @@
-import * as request from "request";
+import ServicesHelper from "../helpers/services helper";
+import RequestMethod from "../enums/RequestMethod";
 
 export default class VatService {
 
+    private static readonly _baseVatUrl = 'https://jsonvat.com';
+    private static readonly _baseHeaders = {
+        'Content-Type': 'application/json',
+    };
+
     getAllVats(): Promise<any> {
         const options = {
-            url: 'https://jsonvat.com',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            url: VatService._baseVatUrl,
+            method: RequestMethod.GET,
+            headers: VatService._baseHeaders
         };
 
-        return new Promise((resolve, reject) => {
-            request(options, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(JSON.parse(body));
-                }
-            });
-        });
+        return ServicesHelper.createPromiseRequest(options);
     }
 }

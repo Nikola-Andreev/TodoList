@@ -1,55 +1,55 @@
 import RequestMethod from "../enums/RequestMethod";
 import ServicesHelper from "../helpers/services helper";
 
-export default class ProductsService {
+export default class OrdersService {
 
-    private static readonly _baseProductsUrl = 'https://baas.kinvey.com/appdata/kid_rJYPtVPCS/products';
+    private static readonly _baseOrdersUrl = 'https://baas.kinvey.com/appdata/kid_rJYPtVPCS/orders';
     private static readonly _baseHeaders = {
         'Content-Type': 'application/json',
         'Authorization': "Basic YWRtaW46YWRtaW4"
     };
 
-    getAllProducts(): Promise<any> {
+    getAllOrders(): Promise<any> {
         const options = {
-            url: ProductsService._baseProductsUrl,
+            url: OrdersService._baseOrdersUrl,
             method: RequestMethod.GET,
-            headers: ProductsService._baseHeaders
+            headers: OrdersService._baseHeaders
         };
 
         return ServicesHelper.createPromiseRequest(options);
     }
 
-    getProductById(id: string): Promise<any> {
+    getOrderById(id: string): Promise<any> {
         const options = {
-            url: `${ProductsService._baseProductsUrl}/${id}`,
+            url: `${OrdersService._baseOrdersUrl}/${id}`,
             method: RequestMethod.GET,
-            headers: ProductsService._baseHeaders
+            headers: OrdersService._baseHeaders
         };
 
         return ServicesHelper.createPromiseRequest(options);
     }
 
-    addProduct(data: any): Promise<any> {
+    addOrder(data: any): Promise<any> {
         const options = {
-            url: ProductsService._baseProductsUrl,
+            url: OrdersService._baseOrdersUrl,
             method: RequestMethod.POST,
-            headers: ProductsService._baseHeaders,
+            headers: OrdersService._baseHeaders,
             json: true,
             body: {
-                price: data.price,
-                category: data.category,
-                name: data.name
+                products: data.products,
+                status: data.status,
+                date: new Date()
             }
         };
 
         return ServicesHelper.createPromiseRequest(options);
     }
 
-    editProduct(data: any, id: string): Promise<any> {
+    editOrder(data: any, id: string): Promise<any> {
         const options = {
-            url: `${ProductsService._baseProductsUrl}/${id}`,
+            url: `${OrdersService._baseOrdersUrl}/${id}`,
             method: RequestMethod.PUT,
-            headers: ProductsService._baseHeaders,
+            headers: OrdersService._baseHeaders,
             json: true,
             body: {
                 price: data.price,
@@ -61,11 +61,11 @@ export default class ProductsService {
         return ServicesHelper.createPromiseRequest(options);
     }
 
-    deleteProduct(id: string): Promise<any> {
+    deleteOrder(id: string): Promise<any> {
         const options = {
-            url: `${ProductsService._baseProductsUrl}/${id}`,
+            url: `${OrdersService._baseOrdersUrl}/${id}`,
             method: RequestMethod.DELETE,
-            headers: ProductsService._baseHeaders
+            headers: OrdersService._baseHeaders
         };
 
         return ServicesHelper.createPromiseRequest(options);
