@@ -1,0 +1,25 @@
+{
+  "name": "products-and-orders-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon"
+  },
+  "author": "Nikola Andreev",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^11.9.0",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "express": "latest",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "request": "^2.88.0"
+  }
+}
