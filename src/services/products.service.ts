@@ -3,10 +3,10 @@ import ServicesHelper from "../helpers/services helper";
 
 export default class ProductsService {
 
-    private static readonly _baseProductsUrl = 'https://baas.kinvey.com/appdata/kid_rJYPtVPCS/products';
+    private static readonly _baseProductsUrl = `${process.env.DB_BASE_URL}/appdata/${process.env.DB_APP_KEY}/products`;
     private static readonly _baseHeaders = {
         'Content-Type': 'application/json',
-        'Authorization': "Basic YWRtaW46YWRtaW4"
+        'Authorization': `Basic ${process.env.MAIN_USER_AUTH_TOKEN}`
     };
 
     getAllProducts(): Promise<any> {

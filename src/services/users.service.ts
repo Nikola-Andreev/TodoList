@@ -3,7 +3,7 @@ import ServicesHelper from "../helpers/services helper";
 
 export default class UsersService {
 
-    private static readonly _baseProductsUrl = 'https://baas.kinvey.com/appdata/kid_rJYPtVPCS/products';
+    private static readonly _baseProductsUrl = `${process.env.DB_BASE_URL}/user/${process.env.DB_APP_KEY}`;
     private static readonly _baseHeaders = {
         'Content-Type': 'application/json',
     };
@@ -14,7 +14,7 @@ export default class UsersService {
             method: RequestMethod.GET,
             headers: {
                 ...UsersService._baseHeaders,
-                'Authorization': "Basic YWRtaW46YWRtaW4"
+                'Authorization': `Basic ${process.env.MAIN_USER_AUTH_TOKEN}`
             }
         };
         
@@ -27,7 +27,7 @@ export default class UsersService {
             method: RequestMethod.POST,
             headers: {
                 ...UsersService._baseHeaders,
-                'Authorization': "Basic a2lkX3JKWVB0VlBDUzpiNjE2NzRjNjg1YTg0NGRhOWIzZTViMWU4NTE4MWQyZg=="
+                'Authorization': `Basic ${process.env.APP_AUTH_TOKEN}`
             },
             json: true,
             body: {

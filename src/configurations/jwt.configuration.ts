@@ -1,8 +1,8 @@
-import { Strategy, ExtractJwt } from "passport-jwt";
+import * as attempt from "@assertchris/attempt-promise";
 import * as jwt from "jsonwebtoken";
-// import * as dotenv from "dotenv";
-import { Request } from "express";
-// dotenv.config({ path: ".env" });
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env" });
+import { Strategy, ExtractJwt } from "passport-jwt";
 import UsersService from "../services/users.service";
 
 export default class JWT {
@@ -16,18 +16,23 @@ export default class JWT {
     public configAuth(passport) {
         const options = {
             jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
-            secretOrKey: "TOP_SECRET_KEY" // process.env.CONFIG_AUTH_KEY
+            secretOrKey: process.env.CONFIG_AUTH_KEY
         };
 
         passport.use(new Strategy(options, async (jwt_payload, next) => {
-            const user = await this._userService.getUserById(jwt_payload.id);
+            let [err, user] = await attempt(this._userService.getUserById(jwt_payload.id));
+            if(err) {
+                next();
+                return;
+            };
+            user = JSON.parse(user);
             user.countryCode = jwt_payload.countryCode;
             next(null, user);
         }));
     }
 
     public generateToken(jwtObject) {
-        return jwt.sign(jwtObject, "TOP_SECRET_KEY", {
+        return jwt.sign(jwtObject, process.env.CONFIG_AUTH_KEY, {
             expiresIn: "1h"
         });
     }

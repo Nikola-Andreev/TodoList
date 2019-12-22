@@ -1,4 +1,5 @@
-import {NextFunction, Request, Response} from 'express';
+import * as attempt from "@assertchris/attempt-promise";
+import {NextFunction, Request, Response} from "express";
 import ProductsService from "../services/products.service";
 import ProductsAdapter from "../adapters/products.adapter";
 
@@ -13,19 +14,21 @@ export default class ProductsController {
     }
 
     async getAllProducts(req: Request, res: Response, next: NextFunction) {
-        const products: any = await this._productsService.getAllProducts().catch((err) => {
+        const [err, products] = await attempt(this._productsService.getAllProducts());
+        if(err) {
             res.status(500).send(err.message);
-        });
-        if(!products) return; 
+            return;
+        };
         res.status(200).send(this._productsAdapter.prepareResponse(JSON.parse(products)));
     }
 
     async addProduct(req: Request, res: Response, next: NextFunction) {
         const countryCode: string = req.user.countryCode;
-        const product: any = await this._productsService.addProduct(req.body).catch(err => {
+        const [err, product] = await attempt(this._productsService.addProduct(req.body));
+        if(err) {
             res.status(500).send(err.message);
-        });
-        if(!product) return; 
+            return;
+        };
         const responseProduct = this._productsAdapter.prepareResponse([product], countryCode);
         res.status(200).send(responseProduct);
     }
@@ -33,31 +36,30 @@ export default class ProductsController {
     async editProduct(req: Request, res: Response, next: NextFunction) {
         const productId: string = req.params.id;
         const countryCode: string = req.user.countryCode;
-        let responseSend = false;
-        const currentProduct = await this._productsService.getProductById(productId).catch(err => {
-            res.status(500).send(err.message);
-            responseSend = true;
-        });
-        if (!currentProduct && !responseSend) {
-            res.status(404).send("Product not fownd");
+        const [errGet, currentProduct] = await attempt(this._productsService.getProductById(productId));
+        if(errGet) {
+            res.status(500).send(errGet.message);
+            return;
+        } else if (!currentProduct) {
+            res.status(404).send("Product not found");
             return;
         }
         const updateData = this._productsAdapter.mergeObjects(JSON.parse(currentProduct), req.body);
-        const updatedProduct: any = await this._productsService.editProduct(updateData, req.params.id).catch(err => {
-            res.status(500).send(err.message);
-        });
-        if(!updatedProduct) return;
+        const [errUpdate, updatedProduct] = await attempt(this._productsService.editProduct(updateData, req.params.id));
+        if(errUpdate) {
+            res.status(500).send(errUpdate.message);
+            return;
+        }
         const responseProduct = this._productsAdapter.prepareResponse([updatedProduct], countryCode);
         res.status(200).send(responseProduct);
     }
 
     async deleteProduct(req: Request, res: Response, next: NextFunction) {
-        let responseSend = false;
-        await this._productsService.deleteProduct(req.params.id).catch(err => {
-                res.status(500).send(err.message);
-                responseSend = true;
-        });
-        if(responseSend) return;
+        const [err, deleteResponse] = await attempt(this._productsService.deleteProduct(req.params.id));
+        if(err) {
+            res.status(500).send(err.message);
+            return;
+        };
         res.status(200).send();
     }
 }

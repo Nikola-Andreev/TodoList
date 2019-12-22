@@ -4,18 +4,24 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "test",
+    "test": "mocha -r ts-node/register src/tests/**/*.test.ts",
     "start": "nodemon"
   },
   "author": "Nikola Andreev",
   "license": "ISC",
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
     "@types/node": "^11.9.0",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
     "nodemon": "^2.0.2",
+    "sinon": "^7.5.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3"
   },
   "dependencies": {
+    "@assertchris/attempt-promise": "^1.0.0",
+    "dotenv": "^8.2.0",
     "express": "latest",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
