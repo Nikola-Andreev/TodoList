@@ -17,7 +17,6 @@ export default class UsersController {
 
     async login(req: Request, res: Response, next: NextFunction) {
         const userData = req.body;
-        console.log(userData);
         const [err, loginData] = await attempt(this._usersService.login(userData.username, userData.password));
         if(err) {
             res.status(500).send(err.message);
@@ -26,7 +25,6 @@ export default class UsersController {
             res.status(401).send(loginData.description);
             return;
         }
-        console.log(loginData);
         const jwtObject = {
             id: loginData._id,
             countryCode: UsersController._defaultCountryCode
