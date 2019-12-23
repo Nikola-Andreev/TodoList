@@ -23,7 +23,7 @@ npm run test
 Use the following routes to access data on localhost
 
 ```python
-POST     http://localhost:3000/api/v1.0.0/users/login             User login
+POST     http://localhost:3000/api/v1.0.0/users/login             User login (username: admin, password: admin)
 
 GET      http://localhost:3000/api/v1.0.0/products                Get all products
 POST     http://localhost:3000/api/v1.0.0/products                Add product
