@@ -1,4 +1,4 @@
-import ServicesHelper from "../helpers/services helper";
+import ServicesHelper from "../helpers/services.helper";
 import RequestMethod from "../enums/RequestMethod";
 
 export default class VatService {

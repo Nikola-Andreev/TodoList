@@ -3,6 +3,7 @@ import * as sinon from 'sinon';
 import UsersController from "../controllers/users.controller";
 import UsersService from "../services/users.service";
 import JWT from "../configurations/jwt.configuration";
+import RequestStatus from "../enums/RequestStatus";
 
 describe('Users controller tests', () => {
 
@@ -42,7 +43,7 @@ describe('Users controller tests', () => {
             // Act
             usersController.login(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 500, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.SERVER_ERROR, done, commonErrorMessage);
             });
         });
     
@@ -56,7 +57,7 @@ describe('Users controller tests', () => {
             // Act
             usersController.login(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 401, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.UNAUTHORIZED, done, commonErrorMessage);
             });
         });
     
@@ -74,15 +75,20 @@ describe('Users controller tests', () => {
             // Act
             usersController.login(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 200, done, `jwt ${expectedToken}`);
+                verify(statusSpy, sendSpy, RequestStatus.OK, done, `jwt ${expectedToken}`);
             });
         });
     })
 
     function verify(statusSpy: sinon.SinonStub, sendSpy: sinon.SinonSpy, expectedStatus: number, done: Function, responseData: any) {
-        expect(statusSpy.getCall(0).args[0]).to.equal(expectedStatus);
-        expect(sendSpy.getCall(0).args[0]).to.equal(responseData);
-        statusSpy.restore();
-        done();
+        try {
+            expect(statusSpy.getCall(0).args[0]).to.equal(expectedStatus);
+            expect(sendSpy.getCall(0).args[0]).to.equal(responseData);
+            done();
+        } catch (err) {
+            done(err);
+        } finally {
+            statusSpy.restore();
+        }
     }
 });

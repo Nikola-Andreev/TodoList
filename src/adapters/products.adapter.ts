@@ -25,7 +25,7 @@ export default class ProductsAdapter {
         const targetRate = this._vatRates.find(vr => vr.country_code === countryCode);
         let rate = ProductsAdapter._defaultVatRate;
         if (targetRate) {
-            rate = targetRate.periods.standart;
+            rate = targetRate.periods[0].rates.standard;
         }
         return products.map((product) => {
             product.id = product._id; 

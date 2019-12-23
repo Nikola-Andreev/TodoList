@@ -3,6 +3,7 @@ import * as sinon from 'sinon';
 import ProductsController from "../controllers/products.controller";
 import ProductsAdapter from "../adapters/products.adapter";
 import ProductsService from "../services/products.service";
+import RequestStatus from "../enums/RequestStatus";
 
 describe('Products controller tests', () => {
 
@@ -43,7 +44,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.getAllProducts(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 500, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.SERVER_ERROR, done, commonErrorMessage);
             });
         });
 
@@ -61,7 +62,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.getAllProducts(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 200, done, result);
+                verify(statusSpy, sendSpy, RequestStatus.OK, done, result);
             });
         });
     });
@@ -77,11 +78,11 @@ describe('Products controller tests', () => {
             // Act
             productsController.addProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 500, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.SERVER_ERROR, done, commonErrorMessage);
             });
         });
 
-        it('addProducts should return 200 if products service return response', (done) => {
+        it('addProducts should return 201 if products service return response', (done) => {
             // Arrange
             const result = {};
             productsService.addProduct = () => {
@@ -95,7 +96,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.addProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 200, done, result);
+                verify(statusSpy, sendSpy, RequestStatus.CREATED, done, result);
             });
         });
     });
@@ -111,7 +112,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.editProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 500, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.SERVER_ERROR, done, commonErrorMessage);
             });
         });
 
@@ -119,13 +120,13 @@ describe('Products controller tests', () => {
             // Arrange
             productsService.getProductById = () => {
                 return new Promise((resolve, reject) => {
-                    resolve();
+                    resolve(JSON.stringify({ error: notFoundErrorMessage }));
                 })
             };
             // Act
             productsController.editProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 404, done, notFoundErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.NOT_FOUND, done, notFoundErrorMessage);
             });
         });
 
@@ -147,7 +148,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.editProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 500, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.SERVER_ERROR, done, commonErrorMessage);
             });
         });
 
@@ -173,7 +174,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.editProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 200, done, responseData);
+                verify(statusSpy, sendSpy, RequestStatus.OK, done, responseData);
             });
         });
     });
@@ -189,7 +190,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.deleteProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 500, done, commonErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.SERVER_ERROR, done, commonErrorMessage);
             });
         });
 
@@ -203,7 +204,7 @@ describe('Products controller tests', () => {
             // Act
             productsController.deleteProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 404, done, notFoundErrorMessage);
+                verify(statusSpy, sendSpy, RequestStatus.NOT_FOUND, done, notFoundErrorMessage);
             });
         });
 
@@ -217,15 +218,20 @@ describe('Products controller tests', () => {
             // Act
             productsController.deleteProduct(request, response).then(() => {
                 // Assert
-                verify(statusSpy, sendSpy, 200, done, undefined);
+                verify(statusSpy, sendSpy, RequestStatus.OK, done, undefined);
             });
         });
     });
 
     function verify(statusSpy: sinon.SinonStub, sendSpy: sinon.SinonSpy, expectedStatus: number, done: Function, responseData: any) {
-        expect(statusSpy.getCall(0).args[0]).to.equal(expectedStatus);
-        expect(sendSpy.getCall(0).args[0]).to.equal(responseData);
-        statusSpy.restore();
-        done();
+        try {
+            expect(statusSpy.getCall(0).args[0]).to.equal(expectedStatus);
+            expect(sendSpy.getCall(0).args[0]).to.equal(responseData);
+            done();
+        } catch (err) {
+            done(err);
+        } finally {
+            statusSpy.restore();
+        }
     }
 });

@@ -2,6 +2,7 @@ import * as attempt from "@assertchris/attempt-promise";
 import {NextFunction, Request, Response} from "express";
 import UsersService from "../services/users.service";
 import JWT from "../configurations/jwt.configuration";
+import RequestStatus from "../enums/RequestStatus";
 
 export default class UsersController {
 
@@ -19,10 +20,10 @@ export default class UsersController {
         const userData = req.body;
         const [err, loginData] = await attempt(this._usersService.login(userData.username, userData.password));
         if(err) {
-            res.status(500).send(err.message);
+            res.status(RequestStatus.SERVER_ERROR).send(err.message);
             return;
         } else if (loginData.error) {
-            res.status(401).send(loginData.description);
+            res.status(RequestStatus.UNAUTHORIZED).send(loginData.description);
             return;
         }
         const jwtObject = {
@@ -30,6 +31,6 @@ export default class UsersController {
             countryCode: UsersController._defaultCountryCode
         };
         const jwt = `jwt ${this._jwt.generateToken(jwtObject)}`;
-        res.status(200).send(jwt);
+        res.status(RequestStatus.OK).send(jwt);
     }
 }
