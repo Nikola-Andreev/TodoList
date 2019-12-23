@@ -5,6 +5,7 @@ import ProductsAdapter from "../adapters/products.adapter";
 
 export default class ProductsController {
 
+    private static readonly _notFoundErrorMessage = "Product not found";
     private readonly _productsService: ProductsService;
     private readonly _productsAdapter: ProductsAdapter;
 
@@ -41,7 +42,7 @@ export default class ProductsController {
             res.status(500).send(errGet.message);
             return;
         } else if (!currentProduct) {
-            res.status(404).send("Product not found");
+            res.status(404).send(ProductsController._notFoundErrorMessage);
             return;
         }
         const updateData = this._productsAdapter.mergeObjects(JSON.parse(currentProduct), req.body);
@@ -59,7 +60,10 @@ export default class ProductsController {
         if(err) {
             res.status(500).send(err.message);
             return;
-        };
+        } else if (JSON.parse(deleteResponse).error) {
+            res.status(404).send(ProductsController._notFoundErrorMessage);
+            return;
+        }
         res.status(200).send();
     }
 }

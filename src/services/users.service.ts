@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env" });
 import RequestMethod from "../enums/RequestMethod";
 import ServicesHelper from "../helpers/services helper";
 
