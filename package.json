@@ -1,21 +1,16 @@
 {
-  "name": "products-and-orders-api",
+  "name": "todo-list-api",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha -r ts-node/register src/tests/**/*.test.ts",
     "start": "nodemon"
   },
   "author": "Nikola Andreev",
   "license": "ISC",
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^11.9.0",
-    "chai": "^4.2.0",
-    "mocha": "^6.2.2",
+    "@types/node": "^13.1.4",
     "nodemon": "^2.0.2",
-    "sinon": "^7.5.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3"
   },

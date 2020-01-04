@@ -6,8 +6,6 @@ import RequestStatus from "../enums/RequestStatus";
 
 export default class UsersController {
 
-    private static readonly _defaultCountryCode: string = 'BG';
-
     private readonly _usersService: UsersService;
     private readonly _jwt: JWT;
 
@@ -23,12 +21,11 @@ export default class UsersController {
             res.status(RequestStatus.SERVER_ERROR).send(err.message);
             return;
         } else if (loginData.error) {
-            res.status(RequestStatus.UNAUTHORIZED).send(loginData.description);
+            res.status(RequestStatus.UNAUTHORIZED).send(loginData.description || loginData.error);
             return;
         }
         const jwtObject = {
-            id: loginData._id,
-            countryCode: UsersController._defaultCountryCode
+            id: loginData._id
         };
         const jwt = `jwt ${this._jwt.generateToken(jwtObject)}`;
         res.status(RequestStatus.OK).send(jwt);

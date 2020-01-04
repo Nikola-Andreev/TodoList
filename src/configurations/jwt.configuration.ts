@@ -24,9 +24,8 @@ export default class JWT {
             if(err) {
                 next();
                 return;
-            };
+            }
             user = JSON.parse(user);
-            user.countryCode = jwt_payload.countryCode;
             next(null, user);
         }));
     }
