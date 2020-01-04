@@ -16,10 +16,9 @@ export default class UsersService {
             method: RequestMethod.GET,
             headers: {
                 ...UsersService._baseHeaders,
-                'Authorization': `Kinvey ${process.env.APP_AUTH_TOKEN}`
+                'Authorization': `Basic ${process.env.MAIN_USER_AUTH_TOKEN}`
             }
         };
-        
         return ServicesHelper.createPromiseRequest(options);
     }
 
@@ -37,7 +36,6 @@ export default class UsersService {
                 password
             }
         };
-        
         return ServicesHelper.createPromiseRequest(options);
     }
 }
