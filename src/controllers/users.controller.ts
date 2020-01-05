@@ -1,7 +1,7 @@
 import * as attempt from "@assertchris/attempt-promise";
 import {NextFunction, Request, Response} from "express";
 import UsersService from "../services/users.service";
-import JWT from "../configurations/jwt.configuration";
+import JWT from "../middlewares/jwt.middleware";
 import RequestStatus from "../enums/RequestStatus";
 
 export default class UsersController {

@@ -25,8 +25,7 @@ export default class JWT {
                 next();
                 return;
             }
-            user = JSON.parse(user);
-            next(null, user);
+            next(null, {id: user._id});
         }));
     }
 

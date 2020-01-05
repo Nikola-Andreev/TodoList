@@ -1,4 +1,3 @@
-import * as passport from "passport";
 import { Router } from "express";
 import ListsController from "../controllers/lists.controller";
 
@@ -18,6 +17,6 @@ export default class ListsRouter {
     }
 
     private _init(): void {
-        this._router.get("/", passport.authenticate("jwt", { session: false }), (req, res, next) => this._listsController.getAllUserLists(req, res, next));
+        this._router.get("/", (req, res, next) => this._listsController.getAllUserLists(req, res, next));
     }
 }

@@ -16,7 +16,7 @@ export default class ListsController {
         if(err) {
             res.status(RequestStatus.SERVER_ERROR).send(err.message || err.description);
             return;
-        };
+        }
         res.status(RequestStatus.OK).send(lists);
     }
 }

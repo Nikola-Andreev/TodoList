@@ -19,4 +19,13 @@ export default class ListsService {
         };
         return ServicesHelper.createPromiseRequest(options);
     }
+
+    getUserListsById(listId: string): Promise<any> {
+        const options = {
+            url: `${ListsService._baseListsUrl}/${listId}`,
+            method: RequestMethod.GET,
+            headers: ListsService._baseHeaders
+        };
+        return ServicesHelper.createPromiseRequest(options);
+    }
 }
