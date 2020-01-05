@@ -13,7 +13,7 @@ export default class ListsService {
 
     getAllUserLists(userId: string): Promise<any> {
         const options = {
-            url: `${ListsService._baseListsUrl}?owner_id=${userId}`,
+            url: `${ListsService._baseListsUrl}?query={"owner_id":"${userId}"}`,
             method: RequestMethod.GET,
             headers: ListsService._baseHeaders
         };

@@ -18,6 +18,7 @@
     "@assertchris/attempt-promise": "^1.0.0",
     "dotenv": "^8.2.0",
     "express": "latest",
+    "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

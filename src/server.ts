@@ -15,24 +15,36 @@ import ItemsController from "./controllers/items.controller";
 import UsersService from "./services/users.service";
 import ListsService from "./services/lists.service";
 import ItemsService from "./services/items.service";
+// Adapters
+import ListsAdapter from "./adapters/lists.adapter";
+import ItemsAdapter from "./adapters/items.adapter";
+// Validators
+import ItemValidator from "./validators/item.validator";
 // Middleware
 import JWT from "./middlewares/jwt.middleware";
 import AuthorizationMiddleware from "./middlewares/authorization.middleware";
+import ValidationMiddleware from "./middlewares/validation.middleware";
 
 const userService: UsersService = new UsersService();
 const listsService: ListsService = new ListsService();
 const itemsService: ItemsService = new ItemsService();
 
+const itemValidator: ItemValidator = new ItemValidator();
+
 const jwt: JWT = new JWT(userService);
 const authorizationMiddleware: AuthorizationMiddleware = new AuthorizationMiddleware(listsService);
+const validationMiddleware: ValidationMiddleware = new ValidationMiddleware(itemValidator);
+
+const listsAdapter: ListsAdapter = new ListsAdapter();
+const itemsAdapter: ItemsAdapter = new ItemsAdapter();
 
 const usersController: UsersController = new UsersController(userService, jwt);
-const listsController: ListsController = new ListsController(listsService);
-const itemsController: ItemsController = new ItemsController(itemsService, listsService);
+const listsController: ListsController = new ListsController(listsService, listsAdapter);
+const itemsController: ItemsController = new ItemsController(itemsService, listsService, itemsAdapter);
 
 const usersRouter: UsersRouter = new UsersRouter(usersController);
 const listsRouter: ListsRouter = new ListsRouter(listsController);
-const itemsRouter: ItemsRouter = new ItemsRouter(itemsController);
+const itemsRouter: ItemsRouter = new ItemsRouter(itemsController, validationMiddleware);
 
 const app: express.Application = (new App(usersRouter, listsRouter, itemsRouter, jwt, authorizationMiddleware)).app;
 

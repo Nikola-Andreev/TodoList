@@ -13,7 +13,7 @@ export default class ItemsService {
 
     getAllListItems(listId: string): Promise<any> {
         const options = {
-            url: `${ItemsService._baseItemsUrl}?list_id=${listId}`,
+            url: `${ItemsService._baseItemsUrl}?query={"list_id":"${listId}"}`,
             method: RequestMethod.GET,
             headers: ItemsService._baseHeaders
         };
@@ -35,7 +35,7 @@ export default class ItemsService {
         return ServicesHelper.createPromiseRequest(options);
     }
 
-    editListItem(data: any, itemId: string): Promise<any> {
+    editListItem(data: any, itemId: string, listId: string): Promise<any> {
         const options = {
             url: `${ItemsService._baseItemsUrl}/${itemId}`,
             method: RequestMethod.PUT,
@@ -44,7 +44,7 @@ export default class ItemsService {
             body: {
                 status: data.status,
                 description: data.description,
-                list_id: data.listId
+                list_id: listId
             }
         };
         return ServicesHelper.createPromiseRequest(options);

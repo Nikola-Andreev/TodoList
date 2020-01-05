@@ -7,7 +7,7 @@ export default class ServicesHelper {
             request(options, (error, response, body) => {
                 let jsonBody: any = {};
                 try {
-                    jsonBody = JSON.parse(body);
+                    jsonBody = typeof body === "string" ? JSON.parse(body) : body;
                 } catch(ignoreErr) {}
                 
                 if (error || jsonBody.error) {

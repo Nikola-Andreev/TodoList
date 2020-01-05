@@ -16,7 +16,6 @@ export default class App {
     private readonly _itemsRouter: ItemsRouter;
     private readonly _jwt: JWT;
     private readonly _authorizationMiddleware: AuthorizationMiddleware;
-    private _checkIsUserOwnsTheList: Function;
 
     constructor(usersRouter: UsersRouter, listsRouter: ListsRouter, itemsRouter: ItemsRouter, jwt: JWT,
                 authorizationMiddleware: AuthorizationMiddleware) {
@@ -53,9 +52,6 @@ export default class App {
         this._app.use(passport.initialize());
         this._app.use(passport.session());
         this._jwt.configAuth(passport);
-        this._checkIsUserOwnsTheList = (req, res, next) => {
-            this._authorizationMiddleware.checkIsUserOwnsTheList(req, res, next);
-        };
     }
 
     private _initRoutes(): void {
@@ -63,6 +59,8 @@ export default class App {
         this._app.use("/api/v1.0.0/lists",
             passport.authenticate("jwt", { session: false }), this._listsRouter.router);
         this._app.use("/api/v1.0.0/lists/:listId/items",
-            passport.authenticate("jwt", { session: false }), this._checkIsUserOwnsTheList,  this._itemsRouter.router);
+            passport.authenticate("jwt", { session: false }),
+            (req, res, next) => this._authorizationMiddleware.checkIsUserOwnsTheList(req, res, next),
+            this._itemsRouter.router);
     }
 }
