@@ -14,7 +14,7 @@ export default class ItemsController {
     constructor(itemsService: ItemsService, listsService: ListsService, itemsAdapter: ItemsAdapter) {
         this._itemsService = itemsService;
         this._listsService = listsService;
-        this._itemsAdapter = itemsAdapter;;
+        this._itemsAdapter = itemsAdapter;
     }
 
     async getAllListItems(req: Request, res: Response, next: NextFunction) {
